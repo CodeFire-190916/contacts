@@ -15,23 +15,25 @@ public class Main {
         Scanner scan = new Scanner(System.in);
 
         while (true) {
-            System.out.println("+-----------+");
-            System.out.println("| CONTACTS: |");
-            System.out.println("+~~~~~~~~~~~+");
-            System.out.println("| a) Show   |");
-            System.out.println("| b) Add    |");
-            System.out.println("| c) Edit   |");
-            System.out.println("| d) Delete |");
-            System.out.println("| 0) Exit   |");
-            System.out.println("+-----------+");
+            System.out.println("+-------------+");
+            System.out.println("| +CONTACTS+  |");
+            System.out.println("+~~~~~~~~~~~~~+");
+            System.out.println("| 1. [S]how   |");
+            System.out.println("| 2. [A]dd    |");
+            System.out.println("| 3. [E]dit   |");
+            System.out.println("| 4. [D]elete |");
+            System.out.println("| 0. E[x]it   |");
+            System.out.println("+-------------+");
 
             String input = scan.nextLine().toLowerCase();
 
             switch (input) {
-                case "a":
+                case "1":
+                case "s":
                     showAllContacts();
                     break;
-                case "b":
+                case "2":
+                case "a":
                     System.out.println("Pls, enter NAME");
                     String firstName = scan.nextLine();
                     System.out.println("Pls, enter SURNAME");
@@ -46,36 +48,54 @@ public class Main {
                     String email = scan.nextLine();
                     addNewContact(firstName, lastName, mainNumber, secondaryNumber, skype, email);
                     break;
-                case "c":
-                    String field;
+                case "3":
+                case "e":
                     System.out.println("Pls, enter contact id");
                     showAllContacts();
                     int num = scan.nextInt();
+
                     System.out.println("Pls, choose the field which you want to edit from the table below");
-                    System.out.println("10. First Name");
-                    System.out.println("20. Last Name");
-                    System.out.println("30. Main Number");
-                    System.out.println("40. Secondary Number");
-                    System.out.println("50. Skype");
-                    System.out.println("60. Email");
-                    int data = scan.nextInt();
-                    if (data == 10){
-                        field = "firstName";
-                    }else if (data == 20){
-                        field = "lastName";
-                    }else if (data == 30){
-                        field = "mainNumber";
-                    }else if (data == 40){
-                        field = "mainNumber";
-                    } else if (data == 50){
-                        field = "skype";
-                    }else {
-                        field = "email";
+                    System.out.println("    1. First Name");
+                    System.out.println("    2. Last Name");
+                    System.out.println("    3. Main Number");
+                    System.out.println("    4. Secondary Number");
+                    System.out.println("    5. Skype");
+                    System.out.println("    6. Email");
+
+                    input = scan.nextLine();
+
+                    String field = "";
+
+                    switch (input) {
+                        case "1":
+                            field = "firstName";
+                            break;
+                        case "2":
+                            field = "lastName";
+                            break;
+                        case "3":
+                            field = "mainNumber";
+                            break;
+                        case "4":
+                            field = "secondaryNumber";
+                            break;
+                        case "5":
+                            field = "skype";
+                            break;
+                        case "6":
+                            field = "email";
+                            break;
+
                     }
-                    System.out.println("Pls, enter new value");
-                    String newData = scan.nextLine();
-                    editContact(num, field, newData);
-                                        break;
+
+                    if (!field.isEmpty()) {
+                        System.out.println("Pls, enter new value");
+                        String newData = scan.nextLine();
+
+                        editContact(num, field, newData);
+                    }
+                    break;
+                case "4":
                 case "d":
                     System.out.println("Pls, enter contact id");
                     showAllContacts();
@@ -83,6 +103,7 @@ public class Main {
                     deleteContact(num);
                     break;
                 case "0":
+                case "x":
                     System.out.println("GOOD BYE!");
                     return;
             }
@@ -99,8 +120,7 @@ public class Main {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("firstName");
-                String surname = rs.getString("lastName")
-                        + rs.getString("lastName");
+                String surname = rs.getString("lastName");
 
                 System.out.printf("%03d. %s.%s\n", id, name, surname);
             }
@@ -123,7 +143,6 @@ public class Main {
     }
 
 
-
     private static void editContact(int num, String field, String newData) {
         try (Connection conn = DriverManager.getConnection(CONNECT_STRING)) {
             Statement sm = conn.createStatement();
@@ -137,7 +156,6 @@ public class Main {
         }
 
     }
-
 
 
     private static void deleteContact(int num) {
